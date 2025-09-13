@@ -1127,7 +1127,7 @@
             // IMPORTANT: In a real production environment, these keys should be stored in
             // environment variables, not directly in the code, for security reasons.
             const supabaseUrl = 'https://xsemvhghjtorwaiewdbi.supabase.co'; // Your Supabase Project URL
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZW12aGdoanRvcndhaWV3ZGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU3ODk5ODQsImV4cCI6MjA0MTM2NTk4NH0.2CTt5M26WaQBCQAsNJMs7FVaDtGSvbxYbv4E2EE1GwQ'; // Your Supabase Anon Key
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZW12aGdoanRvcndhaWV3ZGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1ODk5ODQsImV4cCI6MjA3MzE2NTk4NH0.2CTt5M26WaQBCQAsNJMs7FVaDtGSvbxYbv4E2EE1GwQ'; // Your Supabase Anon Key
             const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
             
             // --- EMAILJS CONFIGURATION ---
@@ -1137,9 +1137,9 @@
             // 2. Add a new service (e.g., Gmail) to get your Service ID.
             // 3. Create an email template to get your Template ID.
             // 4. Find your Public Key in the Account > API Keys section.
-            const EMAILJS_PUBLIC_KEY = 'user_xxxxxxxxxxxxxxxx';   // Replace with your Public Key
-            const EMAILJS_SERVICE_ID = 'service_xxxxxxx';      // Replace with your Service ID
-            const EMAILJS_TEMPLATE_ID = 'template_xxxxxxx';      // Replace with your Template ID
+            const EMAILJS_PUBLIC_KEY = 'oriu7gDSLzDSzhn9B';   // Replace with your Public Key
+            const EMAILJS_SERVICE_ID = 'service_31r74du';      // Replace with your Service ID
+            const EMAILJS_TEMPLATE_ID = 'template_j1dyduq';      // Replace with your Template ID
             
             // --- 2. GLOBAL STATE ---
             let currentUser = null;
@@ -1421,7 +1421,7 @@
                 e.preventDefault();
                 const submitBtn = e.target.querySelector('button[type="submit"]');
 
-                if (EMAILJS_PUBLIC_KEY === 'user_xxxxxxxxxxxxxxxx' || EMAILJS_SERVICE_ID === 'service_xxxxxxx' || EMAILJS_TEMPLATE_ID === 'template_xxxxxxx') {
+                if (EMAILJS_PUBLIC_KEY === 'oriu7gDSLzDSzhn9B' || EMAILJS_SERVICE_ID === 'service_31r74du' || EMAILJS_TEMPLATE_ID === 'template_j1dyduq') {
                     showToast("Contact form is not configured by the website owner.", "error");
                     console.error("EmailJS credentials are placeholders. Please replace them in the script to enable the contact form.");
                     return;
@@ -2435,7 +2435,7 @@
             // --- 8. INITIAL APP LOADER ---
             const initializeApp = async () => {
                  // Initialize EmailJS
-                if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY' && EMAILJS_PUBLIC_KEY !== 'user_xxxxxxxxxxxxxxxx') {
+                if (EMAILJS_PUBLIC_KEY !== 'oriu7gDSLzDSzhn9B' && EMAILJS_PUBLIC_KEY !== 'oriu7gDSLzDSzhn9B') {
                     emailjs.init(EMAILJS_PUBLIC_KEY);
                 }
                 
@@ -2471,3 +2471,4 @@
     </script>
 </body>
 </html>
+
