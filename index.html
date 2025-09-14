@@ -198,21 +198,22 @@
         @media (min-width: 1024px) { .nav-links { max-height: none; overflow: visible; } }
         
         /* Login Modal Tabs */
-        .login-tab, .hub-tab {
+        .login-tab, .hub-tab, .chat-tab {
             cursor: pointer;
             padding: 0.5rem 1rem;
             border-bottom: 2px solid transparent;
             transition: all 0.3s ease;
         }
-        .login-tab.active, .hub-tab.active {
+        .login-tab.active, .hub-tab.active, .chat-tab.active {
             color: #10B981;
             border-bottom-color: #10B981;
             font-weight: 600;
         }
-        .dark .login-tab.active, .dark .hub-tab.active {
+        .dark .login-tab.active, .dark .hub-tab.active, .dark .chat-tab.active {
              color: #34D399;
              border-bottom-color: #34D399;
         }
+        .dark .chat-tab.active { color: white; border-bottom-color: white;}
         
         /* Admin Link Style */
         .admin-link {
@@ -271,6 +272,21 @@
             transform: scale(1);
             opacity: 1;
         }
+        /* Typing indicator for chat */
+        .typing-indicator { display: flex; align-items: center; }
+        .typing-indicator span {
+            height: 8px; width: 8px; margin: 0 2px;
+            background-color: #9ca3af; border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
 
         /* Toast Notification System */
         #toast-container {
@@ -331,6 +347,48 @@
         .strength-weak { background-color: #ef4444; width: 33%;}
         .strength-medium { background-color: #f59e0b; width: 66%;}
         .strength-strong { background-color: #10b981; width: 100%;}
+
+        /* --- NEW: Professional Marquee --- */
+        #announcement-bar {
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        #announcement-bar marquee {
+            font-size: 0.9rem;
+        }
+
+        /* --- NEW: Live Clock --- */
+        #live-clock-container {
+            font-variant-numeric: tabular-nums; /* Ensures numbers don't jump around */
+            letter-spacing: 0.5px;
+        }
+
+        /* --- ENHANCEMENT: Appointment Booking Styles --- */
+        .time-slot {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #d1d5db; /* gray-300 */
+        }
+        .time-slot:hover {
+            background-color: #d1fae5; /* green-100 */
+            border-color: #10b981; /* green-500 */
+            color: #064e3b; /* green-900 */
+        }
+        .time-slot.selected {
+            background-color: #10b981; /* green-500 */
+            border-color: #059669; /* green-600 */
+            color: white;
+            font-weight: 600;
+        }
+        .time-slot.disabled {
+            background-color: #f3f4f6; /* gray-100 */
+            cursor: not-allowed;
+            color: #9ca3af; /* gray-400 */
+            text-decoration: line-through;
+        }
+        .dark .time-slot { border-color: #4b5563; /* gray-600 */ }
+        .dark .time-slot:hover { background-color: #111827; border-color: #34d399; color: #a7f3d0; }
+        .dark .time-slot.selected { background-color: #34d399; border-color: #10b981; color: #064e3b;}
+        .dark .time-slot.disabled { background-color: #374151; color: #6b7280; }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans dark:bg-gray-900 dark:text-gray-200">
@@ -385,6 +443,9 @@
                     <div id="guest-session-view" class="pt-2 lg:pt-0 lg:ml-4 flex items-center">
                         <li><button id="login-register-btn" class="w-full lg:w-auto bg-green-600 text-white font-semibold py-2 px-5 rounded-full shadow-md hover:bg-green-700 transition duration-300 pro-button" data-translate-key="nav_login_register">Login / Register</button></li>
                     </div>
+                    <li class="lg:flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 lg:mr-2 hidden" id="live-clock-wrapper">
+                        <div id="live-clock-container"></div>
+                    </li>
                      <li class="ml-4">
                         <button id="theme-toggle" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700" aria-label="Toggle dark mode">
                             <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
@@ -406,6 +467,18 @@
             </div>
         </nav>
     </header>
+
+    <!-- Live Announcement Marquee -->
+    <div id="announcement-bar" class="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 py-2">
+        <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+            <span class="font-semibold mx-4">Announcement 📢:</span> AI-powered symptom checker now available for preliminary analysis.
+            <span class="text-gray-400 dark:text-gray-500 mx-4">|</span>
+            <span class="font-semibold mx-4">Telemedicine:</span> Doctors are available now for video consultations. Book your appointment today!
+            <span class="text-gray-400 dark:text-gray-500 mx-4">|</span>
+            <span class="font-semibold mx-4">Health Records:</span> Securely access your digital health records anytime.
+            <span class="font-semibold mx-4">Developer Team:</span> AstraMinds Develop this Website to help Rural people of Nabha in Punjab for healcare purpose.
+        </marquee>
+    </div>
 
     <!-- Hero Section -->
     <section id="home" class="text-white py-24 md:py-32 px-4 text-center">
@@ -443,13 +516,13 @@
                     This page is currently under development as we compile more detailed information about our innovative approach to rural healthcare.
                 </p>
                 <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 text-left space-y-4">
-                     <h3 class="text-xl font-bold text-green-700 dark:text-green-400" data-translate-key="learn_more_coming_soon">What's Coming Soon:</h3>
-                     <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                         <li data-translate-key="learn_more_mission"><strong>Our Mission:</strong> A deep dive into why we're dedicated to bridging the urban-rural healthcare gap.</li>
-                         <li data-translate-key="learn_more_tech"><strong>Technology Breakdown:</strong> An inside look at the low-bandwidth solutions and secure infrastructure powering our platform.</li>
-                         <li data-translate-key="learn_more_impact"><strong>Impact Stories:</strong> Testimonials and data showcasing our real-world impact on communities.</li>
-                         <li data-translate-key="learn_more_partner"><strong>Partner With Us:</strong> Information for NGOs, doctors, and pharmacies who want to join our network.</li>
-                     </ul>
+                    <h3 class="text-xl font-bold text-green-700 dark:text-green-400" data-translate-key="learn_more_coming_soon">What's Coming Soon:</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                        <li data-translate-key="learn_more_mission"><strong>Our Mission:</strong> A deep dive into why we're dedicated to bridging the urban-rural healthcare gap.</li>
+                        <li data-translate-key="learn_more_tech"><strong>Technology Breakdown:</strong> An inside look at the low-bandwidth solutions and secure infrastructure powering our platform.</li>
+                        <li data-translate-key="learn_more_impact"><strong>Impact Stories:</strong> Testimonials and data showcasing our real-world impact on communities.</li>
+                        <li data-translate-key="learn_more_partner"><strong>Partner With Us:</strong> Information for NGOs, doctors, and pharmacies who want to join our network.</li>
+                    </ul>
                 </div>
                 <button id="go-back-btn" class="mt-10 bg-green-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-green-700 transition duration-300 pro-button inline-flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -828,47 +901,47 @@
     <div id="patient-detail-modal" class="modal-overlay">
         <div class="modal-content dark:bg-gray-800 w-full max-w-4xl flex flex-col max-h-[90vh]">
              <div class="flex justify-between items-center mb-4 flex-shrink-0">
-                <div>
-                    <h4 id="detail-patient-name" class="text-2xl font-bold">Patient Details</h4>
-                    <p id="detail-patient-info" class="text-sm text-gray-500 dark:text-gray-400"></p>
-                </div>
-                <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
+                 <div>
+                     <h4 id="detail-patient-name" class="text-2xl font-bold">Patient Details</h4>
+                     <p id="detail-patient-info" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                 </div>
+                 <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
             </div>
             <div class="overflow-y-auto -mr-4 pr-4">
                  <div class="mb-6">
                     <h5 class="text-lg font-semibold mb-4 border-b pb-2 dark:border-gray-600" data-translate-key="consultation_add_title">Add New Consultation</h5>
-                      <form id="add-consultation-form" class="space-y-4 bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border dark:border-gray-600">
-                        <input type="hidden" id="consultation-patient-id">
-                        <div>
-                            <label for="consultation-symptoms" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_symptoms">Symptoms</label>
-                            <textarea id="consultation-symptoms" rows="3" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900" required></textarea>
-                        </div>
-                         <div>
-                            <label for="consultation-diagnosis" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_diagnosis">Diagnosis</label>
-                            <textarea id="consultation-diagnosis" rows="2" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900" required></textarea>
-                        </div>
-                        <div>
-                            <label for="consultation-prescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_prescription">Prescription</label>
-                            <textarea id="consultation-prescription" rows="3" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900"></textarea>
-                        </div>
-                         <div>
-                            <label for="consultation-notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_notes">Additional Notes</label>
-                            <textarea id="consultation-notes" rows="2" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900"></textarea>
-                        </div>
-                        <div class="text-right">
-                            <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 pro-button">
-                                <span class="button-text" data-translate-key="consultation_save_btn">Save Consultation</span>
-                                <span class="button-loader hidden"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></span>
-                            </button>
-                        </div>
-                    </form>
+                        <form id="add-consultation-form" class="space-y-4 bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border dark:border-gray-600">
+                            <input type="hidden" id="consultation-patient-id">
+                            <div>
+                               <label for="consultation-symptoms" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_symptoms">Symptoms</label>
+                               <textarea id="consultation-symptoms" rows="3" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900" required></textarea>
+                            </div>
+                            <div>
+                               <label for="consultation-diagnosis" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_diagnosis">Diagnosis</label>
+                               <textarea id="consultation-diagnosis" rows="2" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900" required></textarea>
+                            </div>
+                            <div>
+                               <label for="consultation-prescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_prescription">Prescription</label>
+                               <textarea id="consultation-prescription" rows="3" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900"></textarea>
+                            </div>
+                            <div>
+                               <label for="consultation-notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300" data-translate-key="consultation_notes">Additional Notes</label>
+                               <textarea id="consultation-notes" rows="2" class="mt-1 w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-900"></textarea>
+                            </div>
+                            <div class="text-right">
+                               <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 pro-button">
+                                   <span class="button-text" data-translate-key="consultation_save_btn">Save Consultation</span>
+                                   <span class="button-loader hidden"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></span>
+                               </button>
+                            </div>
+                        </form>
                 </div>
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b pb-2 dark:border-gray-600">
                         <h5 class="text-lg font-semibold" data-translate-key="consultation_history_title">Consultation History</h5>
                          <button id="generate-report-btn" class="bg-gray-600 text-white text-sm font-semibold py-1 px-4 rounded-full hover:bg-gray-700 transition" data-translate-key="consultation_report_btn">Generate Full Report</button>
                     </div>
-                      <div id="consultation-list-container" class="space-y-4">
+                     <div id="consultation-list-container" class="space-y-4">
                         <p class="text-gray-500 text-center">No consultations recorded yet.</p>
                     </div>
                 </div>
@@ -879,8 +952,8 @@
     <div id="record-preview-modal" class="modal-overlay">
         <div class="modal-content dark:bg-gray-800 w-full max-w-xl">
              <div class="flex justify-between items-center mb-4">
-                <h4 class="text-2xl font-bold" data-translate-key="report_title">Patient Health Record</h4>
-                <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
+                 <h4 class="text-2xl font-bold" data-translate-key="report_title">Patient Health Record</h4>
+                 <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
             </div>
             <div id="modal-record-content" class="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-600 rounded-lg p-6 text-sm font-mono whitespace-pre-wrap max-h-96 overflow-y-auto">
             </div>
@@ -894,8 +967,8 @@
     <div id="medicine-tracker-modal" class="modal-overlay">
         <div class="modal-content dark:bg-gray-800 w-full max-w-lg">
              <div class="flex justify-between items-center mb-4">
-                <h4 class="text-2xl font-bold" data-translate-key="medicine_modal_title">Medicine Availability Tracker</h4>
-                <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
+                 <h4 class="text-2xl font-bold" data-translate-key="medicine_modal_title">Medicine Availability Tracker</h4>
+                 <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
             </div>
             <p class="text-center text-gray-600 dark:text-gray-400 mb-6" data-translate-key="medicine_modal_desc">Search for a medicine to find it in nearby pharmacies.</p>
             <form id="medicine-search-form" class="flex items-center mb-6">
@@ -934,14 +1007,14 @@
 
             <div class="overflow-y-auto -mr-4 pr-4">
                  <div id="hub-doctors-view" class="hidden">
-                      <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border dark:border-gray-600 mb-6">
-                         <h5 class="text-lg font-semibold mb-4 border-b pb-2 dark:border-gray-600" data-translate-key="hub_add_doctor">Add New Doctor</h5>
-                         <form id="add-doctor-form" class="space-y-4"></form>
-                     </div>
-                     <div>
-                         <h5 class="text-lg font-semibold mb-4 border-b pb-2 dark:border-gray-600" data-translate-key="hub_registered_doctors">Registered Doctors</h5>
-                         <div id="existing-doctors-list" class="space-y-3"></div>
-                     </div>
+                         <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border dark:border-gray-600 mb-6">
+                             <h5 class="text-lg font-semibold mb-4 border-b pb-2 dark:border-gray-600" data-translate-key="hub_add_doctor">Add New Doctor</h5>
+                             <form id="add-doctor-form" class="space-y-4"></form>
+                         </div>
+                         <div>
+                             <h5 class="text-lg font-semibold mb-4 border-b pb-2 dark:border-gray-600" data-translate-key="hub_registered_doctors">Registered Doctors</h5>
+                             <div id="existing-doctors-list" class="space-y-3"></div>
+                         </div>
                  </div>
                 <div id="hub-admins-view" class="hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1069,7 +1142,7 @@
                                  </li>
                                   <li class="flex items-center gap-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                                     <span>+91-9876543210</span>
+                                      <span>+91-9876543210</span>
                                  </li>
                              </ul>
                         </div>
@@ -1094,15 +1167,55 @@
         </div>
     </div>
 
+    <!-- NEW FEATURE: Appointment Booking Modal -->
+    <div id="appointment-booking-modal" class="modal-overlay">
+        <div class="modal-content dark:bg-gray-800 w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h4 class="text-2xl font-bold">Book Appointment</h4>
+                    <p id="booking-doctor-name" class="text-gray-600 dark:text-gray-400"></p>
+                </div>
+                <button class="close-modal-btn font-bold text-3xl leading-none" aria-label="Close modal">×</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Date</label>
+                    <input type="date" id="appointment-date-picker" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 dark:bg-gray-700">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Available Time Slots</label>
+                    <div id="time-slots-container" class="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                        <!-- Time slots will be generated here -->
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button id="confirm-booking-btn" class="bg-green-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-green-700 transition duration-300 pro-button" disabled>
+                        <span class="button-text">Confirm Booking</span>
+                        <span class="button-loader hidden"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Chat Widget -->
     <div id="chat-widget-container">
         <div id="chat-window" class="bg-white dark:bg-gray-800">
             <div class="p-4 bg-green-600 text-white font-semibold flex justify-between items-center">
-                <h3 class="text-lg">Live Support</h3>
+                 <div class="border-b-2 border-green-600">
+                    <nav class="-mb-px flex space-x-2" id="chat-tabs">
+                        <button class="chat-tab active text-sm" data-chattab="ai">AI HealthBot</button>
+                        <button class="chat-tab text-sm" data-chattab="support">Support</button>
+                    </nav>
+                </div>
                  <button id="close-chat-btn" class="text-white font-bold text-2xl leading-none" aria-label="Close chat">×</button>
             </div>
             <div id="chat-messages" class="flex-1 p-4 space-y-4 overflow-y-auto flex flex-col">
+                 <!-- Chat messages will be appended here -->
+            </div>
+            <div id="ai-disclaimer" class="p-2 text-center text-xs text-gray-400 bg-gray-50 dark:bg-gray-700/50">
+                AI assistant. For informational purposes only. Not medical advice.
             </div>
             <form id="chat-form" class="p-4 border-t dark:border-gray-700 flex items-center">
                 <input type="text" id="chat-input" placeholder="Type your message..." class="w-full border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm p-2 dark:bg-gray-700">
@@ -1137,14 +1250,17 @@
             // 2. Add a new service (e.g., Gmail) to get your Service ID.
             // 3. Create an email template to get your Template ID.
             // 4. Find your Public Key in the Account > API Keys section.
-            const EMAILJS_PUBLIC_KEY = 'oriu7gDSLzDSzhn9B';   // Replace with your Public Key
+            const EMAILJS_PUBLIC_KEY = 'oriu7gDSLzDSzhn9B';    // Replace with your Public Key
             const EMAILJS_SERVICE_ID = 'service_31r74du';      // Replace with your Service ID
-            const EMAILJS_TEMPLATE_ID = 'template_j1dyduq';      // Replace with your Template ID
+            const EMAILJS_TEMPLATE_ID = 'template_j1dyduq';     // Replace with your Template ID
             
             // --- 2. GLOBAL STATE ---
             let currentUser = null;
             let confirmAction = null;
             let allDoctors = []; // To store the full list of doctors for filtering
+            let selectedTimeSlot = null; // For appointment booking
+            let chatHistory = []; // For Gemini API
+            let currentChatTab = 'ai'; // 'ai' or 'support'
 
             // --- 3. UTILITY & HELPER FUNCTIONS ---
 
@@ -1188,6 +1304,35 @@
             
             // --- 4. UI INITIALIZATION & EVENT LISTENERS (Non-Modal) ---
             
+            // --- NEW: Live Clock Logic ---
+            const clockContainer = document.getElementById('live-clock-container');
+            const clockWrapper = document.getElementById('live-clock-wrapper');
+
+            const updateLiveClock = () => {
+                const now = new Date();
+                const options = {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true,
+                };
+                clockContainer.textContent = now.toLocaleString('en-US', options);
+
+                if (window.innerWidth >= 1024) {
+                    clockWrapper.classList.remove('hidden');
+                } else {
+                    clockWrapper.classList.add('hidden');
+                }
+            };
+
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
+            window.addEventListener('resize', updateLiveClock);
+
             // Theme Toggle
             const themeToggleBtn = document.getElementById('theme-toggle');
             const darkIcon = document.getElementById('theme-toggle-dark-icon');
@@ -1358,6 +1503,7 @@
             const medicineTrackerModal = document.getElementById('medicine-tracker-modal');
             const scalableModelModal = document.getElementById('scalable-model-modal');
             const contactModal = document.getElementById('contact-modal');
+            const appointmentBookingModal = document.getElementById('appointment-booking-modal'); // New modal
             
             document.querySelectorAll('.explore-btn').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -1421,7 +1567,7 @@
                 e.preventDefault();
                 const submitBtn = e.target.querySelector('button[type="submit"]');
 
-                if (EMAILJS_PUBLIC_KEY === 'oriu7gDSLzDSzhn9B' || EMAILJS_SERVICE_ID === 'service_31r74du' || EMAILJS_TEMPLATE_ID === 'template_j1dyduq') {
+                if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY' || EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' || EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID') {
                     showToast("Contact form is not configured by the website owner.", "error");
                     console.error("EmailJS credentials are placeholders. Please replace them in the script to enable the contact form.");
                     return;
@@ -1868,7 +2014,7 @@
                             <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">${doctor.full_name}</h3>
                             <p class="text-green-600 dark:text-green-400 font-semibold mb-2">${doctor.specialization || 'General Physician'}</p>
                             <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">${doctor.bio || 'Dedicated to providing the best healthcare.'}</p>
-                            <button class="book-appointment-btn bg-green-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-green-700 transition duration-300 pro-button" data-meeting-id="room-${doctor.id.substring(0, 8)}">Book Appointment</button>
+                            <button class="book-appointment-btn bg-green-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-green-700 transition duration-300 pro-button" data-doctor-id="${doctor.id}" data-doctor-name="${doctor.full_name}">Book Appointment</button>
                         `;
                         doctorsContainer.appendChild(card);
                         animationObserver.observe(card);
@@ -1895,29 +2041,154 @@
             doctorSearchInput.addEventListener('input', filterAndRenderDoctors);
             specializationFilter.addEventListener('change', filterAndRenderDoctors);
             
+            // --- ENHANCEMENT: APPOINTMENT BOOKING LOGIC ---
             doctorsContainer.addEventListener('click', (e) => {
-                if(e.target.matches('.book-appointment-btn')) {
+                if (e.target.matches('.book-appointment-btn')) {
                     if (!currentUser) {
                         showToast("Please log in to book an appointment.", "info");
                         openModal(loginRegisterModal);
                         return;
                     }
-                    const meetingId = e.target.dataset.meetingId;
-                    document.getElementById('jitsi-meeting-id').value = meetingId;
-                    openModal(telemedicineModal);
+                    if (currentUser.role !== 'patient') {
+                        showToast("Only patients can book appointments.", "info");
+                        return;
+                    }
+                    const doctorId = e.target.dataset.doctorId;
+                    const doctorName = e.target.dataset.doctorName;
+                    openAppointmentModal(doctorId, doctorName);
                 }
-            })
+            });
+
+            const appointmentDatePicker = document.getElementById('appointment-date-picker');
+            const timeSlotsContainer = document.getElementById('time-slots-container');
+            const confirmBookingBtn = document.getElementById('confirm-booking-btn');
+
+            const openAppointmentModal = (doctorId, doctorName) => {
+                document.getElementById('booking-doctor-name').textContent = `with Dr. ${doctorName}`;
+                confirmBookingBtn.dataset.doctorId = doctorId;
+                
+                const today = new Date();
+                appointmentDatePicker.min = today.toISOString().split('T')[0];
+                today.setDate(today.getDate() + 30); // Allow booking up to 30 days in advance
+                appointmentDatePicker.max = today.toISOString().split('T')[0];
+                appointmentDatePicker.value = new Date().toISOString().split('T')[0];
+                
+                generateTimeSlots(doctorId, appointmentDatePicker.value);
+                openModal(appointmentBookingModal);
+            };
+
+            appointmentDatePicker.addEventListener('change', () => {
+                const doctorId = confirmBookingBtn.dataset.doctorId;
+                generateTimeSlots(doctorId, appointmentDatePicker.value);
+            });
+
+            const generateTimeSlots = async (doctorId, date) => {
+                timeSlotsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">Loading slots...</p>';
+                selectedTimeSlot = null;
+                confirmBookingBtn.disabled = true;
+
+                // Define standard working hours (e.g., 9 AM to 5 PM)
+                const workingHours = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+                
+                const selectedDate = new Date(date);
+                const today = new Date();
+                const now = new Date();
+                today.setHours(0,0,0,0);
+
+                if (selectedDate < today) {
+                    timeSlotsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">Cannot book appointments for past dates.</p>';
+                    return;
+                }
+
+                // Fetch existing appointments for this doctor on the selected date
+                const { data: existingAppointments, error } = await _supabase
+                    .from('appointments')
+                    .select('appointment_time')
+                    .eq('doctor_id', doctorId)
+                    .gte('appointment_time', `${date}T00:00:00Z`)
+                    .lt('appointment_time', `${date}T23:59:59Z`);
+
+                if (error) {
+                    timeSlotsContainer.innerHTML = '<p class="col-span-full text-center text-red-500">Could not load slots.</p>';
+                    return;
+                }
+
+                const bookedTimes = existingAppointments.map(a => new Date(a.appointment_time).toTimeString().substring(0, 5));
+                
+                timeSlotsContainer.innerHTML = '';
+                workingHours.forEach(time => {
+                    const slotDateTime = new Date(`${date}T${time}:00`);
+                    
+                    const isBooked = bookedTimes.includes(time);
+                    const isPast = now > slotDateTime;
+
+                    const slotEl = document.createElement('button');
+                    slotEl.className = 'time-slot p-2 rounded-lg text-sm font-medium';
+                    slotEl.textContent = new Date(`1970-01-01T${time}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    slotEl.dataset.time = time;
+                    
+                    if (isBooked || isPast) {
+                        slotEl.classList.add('disabled');
+                        slotEl.disabled = true;
+                    }
+
+                    timeSlotsContainer.appendChild(slotEl);
+                });
+            };
+
+            timeSlotsContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.time-slot:not(.disabled)')) {
+                    // Deselect previous
+                    const currentSelected = timeSlotsContainer.querySelector('.selected');
+                    if (currentSelected) {
+                        currentSelected.classList.remove('selected');
+                    }
+                    // Select new
+                    e.target.classList.add('selected');
+                    selectedTimeSlot = e.target.dataset.time;
+                    confirmBookingBtn.disabled = false;
+                }
+            });
+
+            confirmBookingBtn.addEventListener('click', async () => {
+                if (!selectedTimeSlot || !currentUser) return;
+                
+                const doctorId = confirmBookingBtn.dataset.doctorId;
+                const date = appointmentDatePicker.value;
+                const appointment_time = `${date}T${selectedTimeSlot}:00`;
+
+                toggleButtonLoading(confirmBookingBtn, true);
+
+                const { error } = await _supabase
+                    .from('appointments')
+                    .insert({
+                        doctor_id: doctorId,
+                        patient_id: currentUser.id,
+                        appointment_time: appointment_time,
+                        status: 'confirmed'
+                    });
+
+                if (error) {
+                    showToast('Failed to book appointment. The slot may have just been taken.', 'error');
+                } else {
+                    showToast('Appointment booked successfully!', 'success');
+                    closeModal(appointmentBookingModal);
+                }
+                toggleButtonLoading(confirmBookingBtn, false);
+            });
+            // --- END APPOINTMENT BOOKING LOGIC ---
+
 
             const renderExistingDoctors = async () => {
                 const container = document.getElementById('existing-doctors-list');
                  const { data: doctors, error } = await _supabase
-                         .from('profiles')
-                         .select('*')
-                         .eq('role', 'doctor');
+                       .from('profiles')
+                       .select('*')
+                       .eq('role', 'doctor');
                  container.innerHTML = '';
                  if (error || doctors.length === 0) {
-                         container.innerHTML = `<p class="text-gray-500 text-center">No doctors registered.</p>`;
-                         return;
+                       container.innerHTML = `<p class="text-gray-500 text-center">No doctors registered.</p>`;
+                       return;
                  }
                  doctors.forEach(doc => {
                      const docEl = document.createElement('div');
@@ -2353,27 +2624,31 @@
                 toggleButtonLoading(submitBtn, false);
             });
 
-             // --- Chat Widget Logic ---
+            // --- 8. AI CHATBOT LOGIC (GEMINI API) ---
             const chatWindow = document.getElementById('chat-window');
             const chatToggleBtn = document.getElementById('chat-toggle-btn');
             const closeChatBtn = document.getElementById('close-chat-btn');
             const chatMessages = document.getElementById('chat-messages');
             const chatForm = document.getElementById('chat-form');
             const chatInput = document.getElementById('chat-input');
-            let chatInitiated = false;
-
+            const chatTabs = document.getElementById('chat-tabs');
+            const aiDisclaimer = document.getElementById('ai-disclaimer');
+            
             const addChatMessage = (message, sender, isTyping = false) => {
                 const messageEl = document.createElement('div');
                 
+                // Sanitize message to prevent HTML injection
+                const textNode = document.createTextNode(message);
+                
                 if (isTyping) {
-                    messageEl.innerHTML = `<span class="typing-indicator"><span></span><span></span><span></span></span>`;
+                    messageEl.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
                     messageEl.id = 'typing-indicator';
                 } else {
-                    messageEl.textContent = message;
+                    messageEl.appendChild(textNode);
                 }
 
-                messageEl.className = 'p-2 rounded-lg max-w-[80%]';
-                if (sender === 'bot') {
+                messageEl.className = 'p-2 rounded-lg max-w-[80%] break-words';
+                if (sender === 'bot' || sender === 'ai') {
                     messageEl.classList.add('bg-gray-200', 'dark:bg-gray-700', 'self-start');
                 } else {
                     messageEl.classList.add('bg-green-500', 'text-white', 'self-end');
@@ -2382,7 +2657,7 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             };
 
-            const getBotResponse = (userInput) => {
+            const getSimpleBotResponse = (userInput) => {
                 const text = userInput.toLowerCase();
                 let response = "I'm sorry, I don't understand. Can I help with finding a doctor, checking symptoms, or finding medicine?";
 
@@ -2404,35 +2679,117 @@
                     addChatMessage(response, 'bot')
                 }, 1200);
             };
+            
+            const getAIResponse = async (userInput) => {
+                const apiKey = "AIzaSyBaAmQeg8XQl-Id_tfhQO2vfemLspo9hCY"; // This will be provided by the environment, LEAVE IT EMPTY.
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-            const initChat = () => {
-                if (chatInitiated) return;
-                const hours = new Date().getHours();
-                let greeting = "Hello! I'm HealthBot. How can I help you today?";
-                if (hours < 6 || hours > 22) { // Consider offline hours 10 PM to 6 AM
-                    greeting = "Hello! Our support team is currently offline, but I'm HealthBot. How can I help you?";
+                addChatMessage('', 'ai', true); // Show typing indicator
+
+                // Add the new user message to the history
+                chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+
+                const systemPrompt = `You are "AI HealthBot", a helpful and empathetic AI assistant for the "Rural HealthCare" website.
+                Your primary purpose is to provide general health information and wellness tips, and guide users on how to use the website.
+                
+                IMPORTANT RULES:
+                1.  **NEVER give medical advice, diagnoses, or prescriptions.** You are not a doctor.
+                2.  If a user asks for a diagnosis or medical advice (e.g., "What disease do I have?", "Should I take this medicine?"), you MUST refuse and strongly advise them to consult a real doctor using this website or another healthcare provider. Use phrases like "I am an AI assistant and not qualified to give medical advice. It is very important to consult with a doctor for an accurate diagnosis."
+                3.  You CAN provide general information about conditions, wellness, and healthy habits (e.g., "What are common symptoms of the flu?", "What are some tips for a healthy diet?").
+                4.  Be knowledgeable about the website's features: Telemedicine, Digital Health Records, Medicine Tracker, AI Symptom Checker, and the ability to find and book appointments with doctors. Guide users on how to use them.
+                5.  Keep your answers concise, clear, and easy to understand for an audience that may have low health literacy.
+                6.  Maintain a supportive, caring, and professional tone at all times.
+                7.  The current date is ${new Date().toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' })}. The location is India.`;
+
+
+                const payload = {
+                    contents: chatHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const botMessage = result.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble connecting right now. Please try again later.";
+                    
+                    // Add AI response to history
+                    chatHistory.push({ role: "model", parts: [{ text: botMessage }] });
+                    
+                    const typingIndicator = document.getElementById('typing-indicator');
+                    if(typingIndicator) typingIndicator.remove();
+                    addChatMessage(botMessage, 'ai');
+
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    const typingIndicator = document.getElementById('typing-indicator');
+                    if(typingIndicator) typingIndicator.remove();
+                    addChatMessage("My apologies, I'm unable to respond at the moment. Please try again in a little while.", 'ai');
                 }
-                addChatMessage(greeting, 'bot');
-                chatInitiated = true;
+            };
+            
+            const initChat = (tab) => {
+                chatMessages.innerHTML = ''; // Clear messages
+                if (tab === 'ai') {
+                    chatHistory = []; // Reset AI chat history
+                    addChatMessage("Hello! I'm your AI HealthBot. I can provide general health information and help you navigate the site. How can I assist you today?", 'ai');
+                } else {
+                    const hours = new Date().getHours();
+                    let greeting = "Hello! This is our support channel. How can we help you?";
+                    if (hours < 6 || hours > 22) { // Consider offline hours 10 PM to 6 AM
+                        greeting = "Hello! Our support team is currently offline, but please leave a message.";
+                    }
+                    addChatMessage(greeting, 'bot');
+                }
             };
 
             chatToggleBtn.addEventListener('click', () => {
                 chatWindow.classList.toggle('active');
-                initChat();
+                if (chatWindow.classList.contains('active') && chatMessages.children.length === 0) {
+                    initChat(currentChatTab);
+                }
             });
             closeChatBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
+            
+            chatTabs.addEventListener('click', e => {
+                if (e.target.matches('.chat-tab')) {
+                    const tab = e.target.dataset.chattab;
+                    if (tab !== currentChatTab) {
+                        currentChatTab = tab;
+                        chatTabs.querySelector('.active').classList.remove('active');
+                        e.target.classList.add('active');
+                        aiDisclaimer.style.display = (tab === 'ai') ? 'block' : 'none';
+                        initChat(tab);
+                    }
+                }
+            });
+
 
             chatForm.addEventListener('submit', e => {
                 e.preventDefault();
                 const userInput = chatInput.value.trim();
                 if (userInput) {
                     addChatMessage(userInput, 'user');
-                    getBotResponse(userInput);
+                    if(currentChatTab === 'ai') {
+                        getAIResponse(userInput);
+                    } else {
+                        getSimpleBotResponse(userInput);
+                    }
                     chatInput.value = '';
                 }
             });
 
-            // --- 8. INITIAL APP LOADER ---
+            // --- 9. INITIAL APP LOADER ---
             const initializeApp = async () => {
                  // Initialize EmailJS
                 if (EMAILJS_PUBLIC_KEY !== 'oriu7gDSLzDSzhn9B' && EMAILJS_PUBLIC_KEY !== 'oriu7gDSLzDSzhn9B') {
